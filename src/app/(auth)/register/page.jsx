@@ -1,11 +1,11 @@
+import RegisterForm from "@/components/ui/registerForm/registerForm";
 import styles from "./register.module.css";
-import RegisterForm from "@/ui/registerForm/registerForm";
 
 const RegisterPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        <RegisterForm/>
+        <RegisterForm />
       </div>
     </div>
   );
