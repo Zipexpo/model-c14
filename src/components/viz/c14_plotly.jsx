@@ -8,8 +8,14 @@ const chartConfig = {
     color: "black",
   },
 };
-export function C14_plotly({ title, subtitle, width, height, data }) {
+const C14_plotly = ({ title, subtitle, width, height, data }) => {
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
   const vizdata = React.useMemo(() => {
+    if (!isClient) return [];
     return [
       {
         type: "scatterpolar",
@@ -19,7 +25,7 @@ export function C14_plotly({ title, subtitle, width, height, data }) {
         name: "C14",
       },
     ];
-  }, [data]);
+  }, [data, isClient]);
   const layout = {
     polar: {
       radialaxis: {
@@ -65,6 +71,7 @@ export function C14_plotly({ title, subtitle, width, height, data }) {
       },
     ],
   };
+  if (!isClient) return null; // Render nothing until the component is mounted
   return (
     <Plot
       data={vizdata}
@@ -74,4 +81,5 @@ export function C14_plotly({ title, subtitle, width, height, data }) {
       style={{ width: "100%", height: "100%" }}
     />
   );
-}
+};
+export default C14_plotly;
