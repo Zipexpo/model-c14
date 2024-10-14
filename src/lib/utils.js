@@ -13,8 +13,8 @@ export const memberList = {
     { name: "Trần Quang Trà", type: "Mentee" },
     { name: "Trần Minh Tâm", type: "Mentee" },
     { name: "Nguyễn Vương Thùy Ngân", type: "Leader" },
-    { name: "Nguyễn Lê Hà Xuyên", type: "Mentee" },
-    { name: "Nguyễn Thế Luân", type: "Mentee" },
+    // { name: "Nguyễn Lê Hà Xuyên", type: "Mentee" },
+    // { name: "Nguyễn Thế Luân", type: "Mentee" },
   ],
 };
 
