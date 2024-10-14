@@ -1,5 +1,3 @@
-"use client";
-
 import C14Panel from "@/components/page/c14panel";
 
 export default async function HomePage() {
