@@ -1,10 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import User from "@/models/user";
 import { connectToDb } from "./mongodb";
 import { signIn, signOut } from "./auth";
 import bcrypt from "bcryptjs";
+import User from "@/app/models/user";
 
 export const addUser = async (prevState, formData) => {
   const { username, email, password } = Object.fromEntries(formData);
@@ -42,7 +42,7 @@ export const deleteUser = async (formData) => {
   }
 };
 export const handleLogout = async (prevState, formData) => {
-  await signOut('google',{callbackUrl: '/'});
+  await signOut("google", { callbackUrl: "/" });
 };
 
 export const register = async (previousState, formData) => {
@@ -82,13 +82,12 @@ export const register = async (previousState, formData) => {
 };
 
 export const login = async (prevState, formData) => {
-
   try {
     await signIn(
       // 'azure-ad',
-      'google',
-      { callbackUrl: '/' },
-      { prompt: 'login' },
+      "google",
+      { callbackUrl: "/" },
+      { prompt: "login" }
     );
   } catch (err) {
     console.log(err);
