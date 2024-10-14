@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import dynamic from "next/dynamic";
+import { Printer } from "lucide-react";
 
 const metrics = [
   { key: "writing", label: "WRITING" },
@@ -103,9 +104,19 @@ export default function C14Panel() {
   useEffect(() => {
     updateViz();
   }, []);
+  const handlePrint = () => {
+    window.print(); // This will trigger the print dialog
+  };
   return (
     <main className="flex flex-col gap-8 row-start-2 sm:items-start">
-      <h1 className="text-lg font-bold">C14 - MODEL ASSESSMENT</h1>
+      <div className="flex justify-between w-full">
+        <h1 className="text-lg font-bold">C14 - MODEL ASSESSMENT</h1>
+        {/* Print Button */}
+        <Button onClick={handlePrint} className="print:hidden">
+          <Printer className="mr-2" />
+          Print
+        </Button>
+      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
