@@ -11,12 +11,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { C14_plotly } from "@/components/viz/c14_plotly";
 import { cn, memberList } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import dynamic from "next/dynamic";
 
 const metrics = [
   { key: "writing", label: "WRITING" },
@@ -34,7 +34,10 @@ const metrics = [
   { key: "leadership", label: "LEADERSHIP" },
   { key: "presentation", label: "PRESENTATION" },
 ];
-
+// Dynamically import the plotly component with SSR disabled
+const C14_plotly = dynamic(() => import("@/components/viz/c14_plotly"), {
+  ssr: false,
+});
 const metricsMap = metrics.reduce((acc, item) => {
   acc[item.key] = item.label;
   return acc;

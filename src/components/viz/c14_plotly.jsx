@@ -1,8 +1,6 @@
 "use client";
 import * as React from "react";
 import Plot from "react-plotly.js";
-import { ResponsiveContainer } from "recharts";
-import AutoSizer from "lp-react-virtualized-auto-sizer-react-18";
 
 const chartConfig = {
   c14: {
