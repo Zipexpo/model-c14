@@ -1,101 +1,205 @@
-import Image from "next/image";
+"use client";
+import Autocomplete from "@/components/ui/autocomplete";
+import { Button } from "@/components/ui/button";
+import Comboboxfree from "@/components/ui/combofree";
+import { DatePicker } from "@/components/ui/datepicker";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { C14 } from "@/components/viz/c14";
+import { C14_plotly } from "@/components/viz/c14_plotly";
+import { cn, memberList } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import AutoSizer from "lp-react-virtualized-auto-sizer-react-18";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
+const metrics = [
+  { key: "writing", label: "WRITING" },
+  { key: "planning", label: "PLANNING" },
+  { key: "learning", label: "LEARNING" },
+  { key: "interpersonal", label: "INTERPERSONAL" },
+  { key: "crisis_solving", label: "CRISIS SOLVING" },
+  { key: "attendence", label: "ATTENDENCE" },
+  { key: "problem_solving", label: "PROBLEM SOLVING" },
+  { key: "listening", label: "LISTENING" },
+  { key: "project_management", label: "PROJECT MANAGEMENT" },
+  { key: "group_online", label: "GROUP ONLINE" },
+  { key: "team_work", label: "TEAM WORK" },
+  { key: "conflict_resolution", label: "CONFLICT RESOLUTION" },
+  { key: "leadership", label: "LEADERSHIP" },
+  { key: "presentation", label: "PRESENTATION" },
+];
+
+const metricsMap = metrics.reduce((acc, item) => {
+  acc[item.key] = item.label;
+  return acc;
+}, {});
+
+const schema = z.object({
+  target_name: z.string(),
+  // target_type: z.string(),
+  group: z.string(),
+  date: z.string(),
+  user: z.string(),
+  metrics: z.object(
+    metrics.reduce((acc, item) => {
+      acc[item.key] = z.coerce.number().min(0).max(5);
+      return acc;
+    }, {})
+  ),
+});
+const defaultData = {
+  metrics: metrics.reduce((acc, item) => {
+    acc[item.key] = 0;
+    return acc;
+  }, {}),
+};
 export default function Home() {
+  const [target, setTarget] = useState();
+  const form = useForm({
+    mode: "onChange",
+    resolver: zodResolver(schema),
+    defaultValues: defaultData,
+  });
+  const onSubmit = (data) => {
+    // console.log(data);
+  };
+  const mem = useMemo(() => {
+    return [
+      {
+        heading: "Thành viên",
+        member: memberList.members.map((d) => ({
+          label: d.name,
+          value: d.name,
+        })),
+      },
+    ];
+  }, [memberList]);
+  const target_name = form.watch("target_name");
+  useEffect(() => {
+    if (target_name) {
+      const target = memberList.members.find((d) => d.name === target_name);
+      setTarget(target);
+    }
+  }, [target_name, memberList]);
+  const metricsVal = form.watch("metrics");
+  const [vizdata, setVizdata] = useState([]);
+  const updateViz = () => {
+    setVizdata(
+      Object.keys(metricsVal).map((k) => ({
+        subject: metricsMap[k],
+        c14: metricsVal[k] ?? 0,
+      }))
+    );
+  };
+  useEffect(() => {
+    updateViz();
+  }, []);
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="grid grid-rows-[20px_1fr_20px] min-h-screen p-4 pb-20 sm:p-10 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-8 row-start-2 sm:items-start">
+        <h1 className="text-lg font-bold">C14 - MODEL ASSESSMENT</h1>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex-col space-y-2 w-full"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <div className="flex items-center gap-2">
+              <p className="">Họ & tên người được đánh giá:</p>
+              <FormField
+                control={form.control}
+                name="target_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <Comboboxfree predefined={mem} {...field} />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <p className="">Mentor / Mentee / TeamLeader:</p>
+              <Button
+                variant="outline"
+                role="combobox"
+                className={cn("w-[200px] justify-between")}
+              >
+                {target?.type}
+              </Button>
+            </div>
+            <div className="flex gap-8">
+              <div className="flex items-center gap-2">
+                <p className="">Nhóm:</p>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className={cn("w-[200px] justify-between")}
+                >
+                  {memberList.name}
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <p className="">Ngày đánh giá:</p>
+                <DatePicker />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <p className="">Họ & tên người đánh giá:</p>
+              <FormField
+                control={form.control}
+                name="user"
+                render={({ field }) => (
+                  <FormItem>
+                    <Comboboxfree predefined={mem} {...field} />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="print:hidden grid grid-cols-4 md:grid-cols-6 gap-2">
+              {metrics.map(({ key, label }) => (
+                <FormField
+                  key={key}
+                  control={form.control}
+                  name={`metrics.${key}`}
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel>{label}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e); // Update the form state
+                            form.trigger(); // Trigger validation
+                            updateViz();
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ))}
+            </div>
+          </form>
+        </Form>
+        <div className="w-full max-h-[600px] overflow-x-visible flex">
+          {/* <C14 data={vizdata} dataKey="value" /> */}
+          <div className="w-full max-w-[550px] overflow-x-visible h-[600px] m-auto">
+            <C14_plotly data={vizdata} dataKey="value" />
+          </div>
         </div>
+        <div></div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }

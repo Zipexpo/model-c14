@@ -76,3 +76,24 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.flex-c-c {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media print {
+  .recharts-wrapper {
+    width: 100% !important; /* Ensure full width during print */
+    height: auto !important; /* Set height to auto */
+  }
+
+  .recharts-responsive-container {
+    display: block !important; /* Force block display for print */
+  }
+}
+
+.js-plotly-plot .plotly .main-svg {
+  overflow: visible;
+}
