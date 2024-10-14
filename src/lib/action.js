@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { connectToDb } from "./mongodb";
 import { signIn, signOut } from "./auth";
 import bcrypt from "bcryptjs";
-import User from "@/app/models/user";
+import User from "@/models/user";
 
 export const addUser = async (prevState, formData) => {
   const { username, email, password } = Object.fromEntries(formData);
