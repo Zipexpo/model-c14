@@ -198,7 +198,29 @@ export default function Home() {
             <C14_plotly data={vizdata} dataKey="value" />
           </div>
         </div>
-        <div></div>
+        <div className="flex items-center gap-2 w-full relative">
+          <div className="grid grid-cols-12 w-full">
+            <div></div>
+            <div className="relative h-4 w-full bg-gradient-to-r from-white to-black col-span-10"></div>
+            <div></div>
+          </div>
+          <div className="absolute -top-6 left-0 w-full flex justify-between font-bold legend">
+            <span>0</span>
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+          </div>
+          <div className="absolute top-6 left-0 w-full flex justify-between legend">
+            <span>Rất yếu</span>
+            <span>Yếu</span>
+            <span>Trung bình</span>
+            <span>Khá</span>
+            <span>Tốt</span>
+            <span>Rất tốt</span>
+          </div>
+        </div>
       </main>
     </div>
   );

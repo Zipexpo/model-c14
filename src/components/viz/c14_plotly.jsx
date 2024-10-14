@@ -27,6 +27,9 @@ export function C14_plotly({ title, subtitle, width, height, data }) {
       radialaxis: {
         visible: true,
         range: [-1, 5],
+        font: {
+          size: 20, // Font size for radial axis title
+        },
       },
     },
     autosize: true,

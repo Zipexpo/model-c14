@@ -97,3 +97,7 @@ body {
 .js-plotly-plot .plotly .main-svg {
   overflow: visible;
 }
+
+.legend span {
+  @apply text-center w-full;
+}
